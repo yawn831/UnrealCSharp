@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMacro/BufferMacro.h"
+#include "Binding/Core/TPropertyClass.inl"
 #include "Binding/Core/TPropertyValue.inl"
 #include "Binding/TypeInfo/TTypeInfo.inl"
 #include "Environment/FCSharpEnvironment.h"
@@ -26,6 +27,12 @@ struct TPropertyBuilder
 template <typename Class, typename Result, auto Member>
 struct TPrimitivePropertyBuilder
 {
+	static auto Get(std::decay_t<Result>& InValue)
+	{
+		return TPropertyClass<Result, Result>::Get()->BoxValue(
+			const_cast<std::remove_const_t<std::decay_t<Result>>*>(&InValue));
+	}
+	
 	static auto Get(const FGarbageCollectionHandle InGarbageCollectionHandle, RETURN_BUFFER_SIGNATURE)
 	{
 		if constexpr (std::is_same_v<Class, void>)
@@ -67,6 +74,11 @@ struct TPrimitivePropertyBuilder
 template <typename Class, typename Result, auto Member>
 struct TCompoundPropertyBuilder
 {
+	static auto Get(std::decay_t<Result>& InValue)
+	{
+		return TPropertyValue<Result, Result>::template Get<false>(&InValue);
+	}
+	
 	static auto Get(const FGarbageCollectionHandle InGarbageCollectionHandle, RETURN_BUFFER_SIGNATURE)
 	{
 		if constexpr (std::is_same_v<Class, void>)
@@ -91,7 +103,7 @@ struct TCompoundPropertyBuilder
 	{
 		if constexpr (std::is_same_v<Class, void>)
 		{
-			*const_cast<std::remove_const_t<Result>*>(Member) = TPropertyValue<Result, Result>::Set(
+			*const_cast<std::remove_const_t<Result>*>(Member) = TPropertyValue<Result, Result>::Get(
 				*(FGarbageCollectionHandle*)IN_BUFFER);
 		}
 		else
@@ -99,7 +111,7 @@ struct TCompoundPropertyBuilder
 			if (auto FoundObject = FCSharpEnvironment::TGetObject<Class, Class>()(
 				FCSharpEnvironment::GetEnvironment(), InGarbageCollectionHandle))
 			{
-				FoundObject->*Member = TPropertyValue<Result, Result>::Set(
+				FoundObject->*Member = TPropertyValue<Result, Result>::Get(
 					*(FGarbageCollectionHandle*)IN_BUFFER);
 			}
 		}
@@ -512,3 +524,5 @@ struct TPropertyBuilder<Result*, Member, std::enable_if_t<TIsTOptional<std::deca
 {
 };
 #endif
+
+

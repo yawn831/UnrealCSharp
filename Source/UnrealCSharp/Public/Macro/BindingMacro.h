@@ -234,7 +234,7 @@ struct TIsNotUEnum<Class> \
 
 #define BINDING_PROPERTY_BUILDER_SET(Property) TPropertyBuilder<decltype(Property), Property>::Set
 
-#define BINDING_PROPERTY_BUILDER_GET(Property) TPropertyBuilder<decltype(Property), Property>::Get
+#define BINDING_PROPERTY_BUILDER_GET(Property) static_cast<void(*)(BINDING_PROPERTY_BUILDER_GET_SIGNATURE)>([](BINDING_PROPERTY_BUILDER_GET_SIGNATURE){ TPropertyBuilder<decltype(Property), Property>::Get(BINDING_PROPERTY_BUILDER_GET_PARAM); })
 
 #define BINDING_PROPERTY_BUILDER_INFO(Property) {[](){ return TPropertyBuilder<decltype(Property), Property>::Info(); }}
 

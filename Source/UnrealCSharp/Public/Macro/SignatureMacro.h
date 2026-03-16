@@ -21,3 +21,7 @@
 #define BINDING_SUBSCRIPT_SET_SIGNATURE const FGarbageCollectionHandle InGarbageCollectionHandle, IN_BUFFER_SIGNATURE
 
 #define BINDING_SUBSCRIPT_SET_PARAM InGarbageCollectionHandle, IN_BUFFER
+
+#define BINDING_PROPERTY_BUILDER_GET_SIGNATURE const FGarbageCollectionHandle InGarbageCollectionHandle, RETURN_BUFFER_SIGNATURE
+
+#define BINDING_PROPERTY_BUILDER_GET_PARAM InGarbageCollectionHandle, RETURN_BUFFER

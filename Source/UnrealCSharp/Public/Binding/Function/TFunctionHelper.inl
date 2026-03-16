@@ -13,7 +13,7 @@ struct TFunctionHelper
 };
 
 template <typename Result, typename... Args>
-struct TFunctionHelper<TPair<Result, std::tuple<Args...>>>
+struct TFunctionHelper<std::tuple<Result, std::tuple<Args...>>>
 {
 	template <typename Function, auto... Index>
 	static auto Call(Function InFunction, std::index_sequence<Index...>, BINDING_FUNCTION_SIGNATURE)

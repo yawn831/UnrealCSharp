@@ -40,7 +40,7 @@ public:
 
 	FClassBuilder& Function(const FString& InName,
 #if WITH_FUNCTION_INFO
-	                        const TArray<TPair<void*, TFunction<FFunctionInfo*()>>>& InMethod
+	                        const TArray<std::tuple<void*, TFunction<FFunctionInfo*()>>>& InMethod
 #else
 	                        const TArray<void*>& InMethod
 #endif
