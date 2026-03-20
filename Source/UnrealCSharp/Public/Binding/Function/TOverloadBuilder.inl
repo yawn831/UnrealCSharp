@@ -10,12 +10,12 @@ template <typename FunctionType>
 struct TOverloadBuilder
 {
 #if WITH_FUNCTION_INFO
-	static auto GetImplementation(TArray<TPair<FunctionType, InfoType>>& OutValue)
+	static auto GetImplementation(TArray<std::tuple<FunctionType, InfoType>>& OutValue)
 	{
 	}
 
 	template <typename Function, typename Info, typename... Args>
-	static auto GetImplementation(TArray<TPair<FunctionType, InfoType>>& OutValue,
+	static auto GetImplementation(TArray<std::tuple<FunctionType, InfoType>>& OutValue,
 	                              Function InFunction,
 	                              Info InInfo,
 	                              Args&&... InParams)
@@ -26,9 +26,9 @@ struct TOverloadBuilder
 	}
 
 	template <typename... Args>
-	static auto Get(Args&&... InParams) -> const TArray<TPair<FunctionType, InfoType>>&
+	static auto Get(Args&&... InParams) -> const TArray<std::tuple<FunctionType, InfoType>>&
 	{
-		static TArray<TPair<FunctionType, InfoType>> Value;
+		static TArray<std::tuple<FunctionType, InfoType>> Value;
 
 		GetImplementation(Value, InParams...);
 

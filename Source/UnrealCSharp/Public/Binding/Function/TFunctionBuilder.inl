@@ -15,7 +15,7 @@ struct TFunctionBuilder<Result (*)(Args...), Function> :
 {
 	static auto Invoke(BINDING_FUNCTION_SIGNATURE)
 	{
-		TFunctionHelper<TPair<Result, std::tuple<Args...>>>::Call(
+		TFunctionHelper<std::tuple<Result, std::tuple<Args...>>>::Call(
 			Function, std::make_index_sequence<sizeof...(Args)>(), BINDING_FUNCTION_PARAM);
 	}
 };
@@ -27,7 +27,7 @@ struct TFunctionBuilder<Result (Class::*)(Args...), Function> :
 {
 	static auto Invoke(BINDING_FUNCTION_SIGNATURE)
 	{
-		TFunctionHelper<TPair<Result, std::tuple<Args...>>>::template Call<Class>(
+		TFunctionHelper<std::tuple<Result, std::tuple<Args...>>>::template Call<Class>(
 			Function, std::make_index_sequence<sizeof...(Args)>(), BINDING_FUNCTION_PARAM);
 	}
 };
@@ -39,7 +39,7 @@ struct TFunctionBuilder<Result (Class::*)(Args...) const, Function> :
 {
 	static auto Invoke(BINDING_FUNCTION_SIGNATURE)
 	{
-		TFunctionHelper<TPair<Result, std::tuple<Args...>>>::template Call<Class>(
+		TFunctionHelper<std::tuple<Result, std::tuple<Args...>>>::template Call<Class>(
 			Function, std::make_index_sequence<sizeof...(Args)>(), BINDING_FUNCTION_PARAM);
 	}
 };
