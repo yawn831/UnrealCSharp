@@ -1,4 +1,4 @@
-﻿#include "Listener/FEngineListener.h"
+#include "Listener/FEngineListener.h"
 #if !WITH_EDITOR
 #include "Interfaces/IPluginManager.h"
 #endif

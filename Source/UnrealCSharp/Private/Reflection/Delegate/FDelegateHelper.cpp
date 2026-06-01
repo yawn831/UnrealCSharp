@@ -1,4 +1,4 @@
-﻿#include "Reflection/Delegate/FDelegateHelper.h"
+#include "Reflection/Delegate/FDelegateHelper.h"
 
 FDelegateHelper::FDelegateHelper()
 {

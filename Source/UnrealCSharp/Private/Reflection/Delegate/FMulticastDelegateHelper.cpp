@@ -1,4 +1,4 @@
-﻿#include "Reflection/Delegate/FMulticastDelegateHelper.h"
+#include "Reflection/Delegate/FMulticastDelegateHelper.h"
 
 FMulticastDelegateHelper::FMulticastDelegateHelper()
 {

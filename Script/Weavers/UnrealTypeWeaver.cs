@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Fody;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -36,6 +36,10 @@ namespace Weavers
         private MethodDefinition _genericCall26Implementation;
 
         private MethodDefinition _getGarbageCollectionHandle;
+
+#if WITH_CORECLR
+        private MethodDefinition _getObject;
+#endif
 
         private TypeDefinition _pathNameAttributeType;
 
@@ -426,11 +430,20 @@ namespace Weavers
 
                 var BufferSize = GetTypeSize(Property.PropertyType);
 
+#if WITH_CORECLR
+                var bIsCompound = GetGarbageCollectionHandle(Property.PropertyType) != null;
+#endif
+
                 Property.GetMethod.Body.Variables.Add(
                     new VariableDefinition(new PointerType(ModuleDefinition.TypeSystem.Byte)));
 
-                Property.GetMethod.Body.Variables.Add(
-                    new VariableDefinition(ModuleDefinition.ImportReference(Property.PropertyType)));
+#if WITH_CORECLR
+                if (!bIsCompound)
+#endif
+                {
+                    Property.GetMethod.Body.Variables.Add(
+                        new VariableDefinition(ModuleDefinition.ImportReference(Property.PropertyType)));
+                }
 
                 Property.GetMethod.Body.InitLocals = true;
 
@@ -466,19 +479,37 @@ namespace Weavers
 
                 ilProcessor.Append(Instruction.Create(OpCodes.Ldloc_0));
 
-                ilProcessor.Append(GetTypeLdind(Property.PropertyType));
+#if WITH_CORECLR
+                if (bIsCompound)
+                {
+                    ilProcessor.Append(Instruction.Create(OpCodes.Ldind_I));
 
-                ilProcessor.Append(Instruction.Create(OpCodes.Stloc_1));
+                    ilProcessor.Append(Instruction.Create(OpCodes.Conv_I8));
 
-                var i1 = Instruction.Create(OpCodes.Ldloc_1);
+                    ilProcessor.Append(Instruction.Create(OpCodes.Call, ModuleDefinition.ImportReference(_getObject)));
 
-                var i0 = Instruction.Create(OpCodes.Br_S, i1);
+                    ilProcessor.Append(Instruction.Create(OpCodes.Castclass,
+                        ModuleDefinition.ImportReference(Property.PropertyType)));
 
-                ilProcessor.Append(i0);
+                    ilProcessor.Append(Instruction.Create(OpCodes.Ret));
+                }
+                else
+#endif
+                {
+                    ilProcessor.Append(GetTypeLdind(Property.PropertyType));
 
-                ilProcessor.Append(i1);
+                    ilProcessor.Append(Instruction.Create(OpCodes.Stloc_1));
 
-                ilProcessor.Append(Instruction.Create(OpCodes.Ret));
+                    var i1 = Instruction.Create(OpCodes.Ldloc_1);
+
+                    var i0 = Instruction.Create(OpCodes.Br_S, i1);
+
+                    ilProcessor.Append(i0);
+
+                    ilProcessor.Append(i1);
+
+                    ilProcessor.Append(Instruction.Create(OpCodes.Ret));
+                }
             }
         }
 
@@ -630,11 +661,20 @@ namespace Weavers
 
                 var BufferSize = GetTypeSize(Property.PropertyType);
 
+#if WITH_CORECLR
+                var bIsCompound = GetGarbageCollectionHandle(Property.PropertyType) != null;
+#endif
+
                 Property.GetMethod.Body.Variables.Add(
                     new VariableDefinition(new PointerType(ModuleDefinition.TypeSystem.Byte)));
 
-                Property.GetMethod.Body.Variables.Add(
-                    new VariableDefinition(ModuleDefinition.ImportReference(Property.PropertyType)));
+#if WITH_CORECLR
+                if (!bIsCompound)
+#endif
+                {
+                    Property.GetMethod.Body.Variables.Add(
+                        new VariableDefinition(ModuleDefinition.ImportReference(Property.PropertyType)));
+                }
 
                 Property.GetMethod.Body.InitLocals = true;
 
@@ -670,19 +710,37 @@ namespace Weavers
 
                 ilProcessor.Append(Instruction.Create(OpCodes.Ldloc_0));
 
-                ilProcessor.Append(GetTypeLdind(Property.PropertyType));
+#if WITH_CORECLR
+                if (bIsCompound)
+                {
+                    ilProcessor.Append(Instruction.Create(OpCodes.Ldind_I));
 
-                ilProcessor.Append(Instruction.Create(OpCodes.Stloc_1));
+                    ilProcessor.Append(Instruction.Create(OpCodes.Conv_I8));
 
-                var i1 = Instruction.Create(OpCodes.Ldloc_1);
+                    ilProcessor.Append(Instruction.Create(OpCodes.Call, ModuleDefinition.ImportReference(_getObject)));
 
-                var i0 = Instruction.Create(OpCodes.Br_S, i1);
+                    ilProcessor.Append(Instruction.Create(OpCodes.Castclass,
+                        ModuleDefinition.ImportReference(Property.PropertyType)));
 
-                ilProcessor.Append(i0);
+                    ilProcessor.Append(Instruction.Create(OpCodes.Ret));
+                }
+                else
+#endif
+                {
+                    ilProcessor.Append(GetTypeLdind(Property.PropertyType));
 
-                ilProcessor.Append(i1);
+                    ilProcessor.Append(Instruction.Create(OpCodes.Stloc_1));
 
-                ilProcessor.Append(Instruction.Create(OpCodes.Ret));
+                    var i1 = Instruction.Create(OpCodes.Ldloc_1);
+
+                    var i0 = Instruction.Create(OpCodes.Br_S, i1);
+
+                    ilProcessor.Append(i0);
+
+                    ilProcessor.Append(i1);
+
+                    ilProcessor.Append(Instruction.Create(OpCodes.Ret));
+                }
             }
         }
 
@@ -833,6 +891,8 @@ namespace Weavers
 
             Method.Body.GetILProcessor().Clear();
 
+            Method.Body.Variables.Clear();
+
             if (Method.Parameters.Count > 0)
             {
                 sbyte BufferSize = 0;
@@ -957,20 +1017,13 @@ namespace Weavers
                 newMethod.Parameters.Add(new ParameterDefinition(param.ParameterType));
             }
 
-            foreach (var variable in Method.Body.Variables)
-            {
-                newMethod.Body.Variables.Add(new VariableDefinition(variable.VariableType));
-            }
-
-            newMethod.Body.InitLocals = Method.Body.InitLocals;
-
             if (Method.HasBody)
             {
                 newMethod.Body.InitLocals = true;
 
                 foreach (var variableDefinition in Method.Body.Variables)
                 {
-                    newMethod.Body.Variables.Add(variableDefinition);
+                    newMethod.Body.Variables.Add(new VariableDefinition(variableDefinition.VariableType));
                 }
 
                 foreach (var exceptionHandler in Method.Body.ExceptionHandlers)
@@ -1107,6 +1160,12 @@ namespace Weavers
             _setStructPropertyImplementation = definition.GetType("Script.Library.FPropertyImplementation")
                 .Methods
                 .FirstOrDefault(Method => Method.Name == "FProperty_SetStructPropertyImplementation");
+
+#if WITH_CORECLR
+            _getObject = ModuleDefinition.AssemblyResolver.Resolve(ModuleDefinition.AssemblyReferences
+                    .FirstOrDefault(Assembly => Assembly.Name == "Interop")).MainModule?.GetType("Interop.HandleData")
+                .Methods.FirstOrDefault(Method => Method.Name == "GetObject");
+#endif
 
             _genericCall24Implementation = definition.GetType("Script.Library.FFunctionImplementation").Methods
                 .FirstOrDefault(Method => Method.Name == "FFunction_GenericCall24Implementation");

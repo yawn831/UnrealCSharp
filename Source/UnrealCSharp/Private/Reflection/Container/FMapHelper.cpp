@@ -1,4 +1,4 @@
-﻿#include "Reflection/Container/FMapHelper.h"
+#include "Reflection/Container/FMapHelper.h"
 #include "CppVersion.h"
 
 FMapHelper::FMapHelper(FProperty* InKeyProperty, FProperty* InValueProperty, void* InData,

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #define PLUGIN_NAME FString(TEXT("UnrealCSharp"))
 
@@ -30,6 +30,8 @@
 
 #define WEAVERS_NAME FString(TEXT("Weavers"))
 
+#define INTEROP_NAME FString(TEXT("Interop"))
+
 #define UNREAL_TYPE_SOURCE_GENERATOR_NAME FString(TEXT("UnrealTypeSourceGenerator"))
 
 #define ANALYZER_RELEASES_UN_SHIPPED_NAME FString(TEXT("AnalyzerReleases.Unshipped"))
@@ -45,6 +47,8 @@
 #define BINDING_NAME FString(TEXT("Binding"))
 
 #define CSHARP_GUID FString(TEXT("9A19103F-16F7-4668-BE54-9A1E7A4F7556"))
+
+#define INTEROP_GUID FString(TEXT("E3A5C6B1-2D4F-4A8E-9B7C-1F6D3E2A5B8C"))
 
 #define PROJECT_PLACEHOLDER FString(TEXT("ProjectPlaceholder"))
 

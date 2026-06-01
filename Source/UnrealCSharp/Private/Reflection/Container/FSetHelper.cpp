@@ -1,4 +1,4 @@
-﻿#include "Reflection/Container/FSetHelper.h"
+#include "Reflection/Container/FSetHelper.h"
 #include "Reflection/Property/FPropertyDescriptor.h"
 #include "CppVersion.h"
 

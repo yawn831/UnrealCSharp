@@ -1,4 +1,4 @@
-﻿#include "Reflection/Container/FArrayHelper.h"
+#include "Reflection/Container/FArrayHelper.h"
 #include "Reflection/Property/FPropertyDescriptor.h"
 
 FArrayHelper::FArrayHelper(FProperty* InProperty, void* InData,
