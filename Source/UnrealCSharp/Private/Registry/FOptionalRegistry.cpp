@@ -56,11 +56,13 @@ bool FOptionalRegistry::RemoveReference(const IManagedHandle InManagedHandle)
 {
 	if (const auto FoundValue = ManagedHandle2Helper.Find(InManagedHandle))
 	{
-		if (const auto FoundManagedHandle = Address2ManagedHandle.Find(*FoundValue))
+		const auto Address = (*FoundValue)->GetAddress();
+
+		if (const auto FoundManagedHandle = Address2ManagedHandle.Find(Address))
 		{
 			if (*FoundManagedHandle == InManagedHandle)
 			{
-				Address2ManagedHandle.Remove(*FoundValue);
+				Address2ManagedHandle.Remove(Address);
 			}
 		}
 

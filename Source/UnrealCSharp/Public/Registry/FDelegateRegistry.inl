@@ -62,11 +62,13 @@ struct FDelegateRegistry::TDelegateRegistryImplementation<
 	{
 		if (const auto FoundValue = (InRegistry->*ManagedHandle2Value).Find(InManagedHandle))
 		{
-			if (const auto FoundManagedHandle = (InRegistry->*Address2ManagedHandle).Find(*FoundValue))
+			const auto Address = (*FoundValue)->GetAddress();
+
+			if (const auto FoundManagedHandle = (InRegistry->*Address2ManagedHandle).Find(Address))
 			{
 				if (*FoundManagedHandle == InManagedHandle)
 				{
-					(InRegistry->*Address2ManagedHandle).Remove(*FoundValue);
+					(InRegistry->*Address2ManagedHandle).Remove(Address);
 				}
 			}
 

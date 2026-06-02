@@ -19,6 +19,9 @@ auto FStructRegistry::AddReference(UScriptStruct* InScriptStruct, const void* In
 	const auto ManagedHandle = FReflectionRegistry::Get().GetClass(InScriptStruct)->NewWeakRefGCHandle(
 		InManagedHandle, true);
 
+	StructAddress2ManagedHandle.Add(
+		FStructAddressBase(InScriptStruct, const_cast<void*>(InStruct)), ManagedHandle);
+
 	ManagedHandle2StructAddress.Add(ManagedHandle, {
 		                                InScriptStruct,
 		                                const_cast<void*>(InStruct),
