@@ -93,7 +93,6 @@ void FSolutionGenerator::Generator()
 		TArray<TFunction<void(FString& OutResult)>>
 		{
 			&FSolutionGenerator::ReplacePluginBaseDir,
-			&FSolutionGenerator::ReplaceTargetFramework,
 			&FSolutionGenerator::AddProjectGeneratorHeaderComment
 		});
 
@@ -103,7 +102,6 @@ void FSolutionGenerator::Generator()
 		TArray<TFunction<void(FString& OutResult)>>
 		{
 			&FSolutionGenerator::ReplaceImport,
-			&FSolutionGenerator::ReplaceTargetFramework,
 			&FSolutionGenerator::ReplaceProjectReference
 		},
 		false);
@@ -121,6 +119,7 @@ void FSolutionGenerator::Generator()
 		FPaths::Combine(TemplatePath, SHARED_NAME + PROPS_SUFFIX),
 		TArray<TFunction<void(FString& OutResult)>>
 		{
+			&FSolutionGenerator::ReplaceTargetFramework,
 			&FSolutionGenerator::ReplaceDefineConstants,
 			&FSolutionGenerator::ReplaceHintPath,
 			&FSolutionGenerator::AddProjectGeneratorHeaderComment

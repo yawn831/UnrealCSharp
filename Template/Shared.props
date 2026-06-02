@@ -1,5 +1,6 @@
 <Project>
   <PropertyGroup>
+    <TargetFramework></TargetFramework>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <RootNamespace>Script</RootNamespace>
     <GenerateDependencyFile>false</GenerateDependencyFile>
