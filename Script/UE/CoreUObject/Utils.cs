@@ -24,7 +24,12 @@ namespace Script.CoreUObject
                     ? InType.GetGenericTypeDefinition()
                     : InType;
 
-        private static void SetOut() => Console.SetOut(Log.Log.Create());
+        private static void SetOut()
+        {
+            Console.SetOut(Log.Log.Create(InIsError: false));
+
+            Console.SetError(Log.Log.Create(InIsError: true));
+        }
 
         private static string GetTraceback()
         {

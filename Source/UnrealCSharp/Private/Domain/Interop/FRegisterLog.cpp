@@ -9,13 +9,24 @@ namespace
 		/**
 		* https://github.com/mono-ue/UnrealEngine/blob/monoue/Engine/Plugins/MonoUE/Source/MonoRuntime/Private/MonoLogTextWriter.cpp#L14
 		*/
-		static void LogImplementation(const UTF16CHAR* InBuffer, const unsigned int InReadOffset)
+		static void LogImplementation(const UTF16CHAR* InBuffer, const unsigned int InReadOffset, const bool InIsError)
 		{
 #if !NO_LOGGING
-			if (UE_LOG_ACTIVE(LogUnrealCSharp, Log))
+			if (InIsError)
 			{
-				GLog->Serialize(StringCast<TCHAR>(InBuffer + 2 * sizeof(void*)).Get() + InReadOffset,
-				                ELogVerbosity::Log, LogUnrealCSharp.GetCategoryName());
+				if (UE_LOG_ACTIVE(LogUnrealCSharp, Error))
+				{
+					GLog->Serialize(StringCast<TCHAR>(InBuffer + 2 * sizeof(void*)).Get() + InReadOffset,
+					                ELogVerbosity::Error, LogUnrealCSharp.GetCategoryName());
+				}
+			}
+			else
+			{
+				if (UE_LOG_ACTIVE(LogUnrealCSharp, Log))
+				{
+					GLog->Serialize(StringCast<TCHAR>(InBuffer + 2 * sizeof(void*)).Get() + InReadOffset,
+					                ELogVerbosity::Log, LogUnrealCSharp.GetCategoryName());
+				}
 			}
 #endif
 		}
