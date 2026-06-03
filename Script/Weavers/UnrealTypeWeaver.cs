@@ -86,7 +86,9 @@ namespace Weavers
 
         public override IEnumerable<string> GetAssembliesForScanning()
         {
-            yield return "";
+            yield return "UENamePlaceholder";
+
+            yield return "GameNamePlaceholder";
         }
 
         private void ProcessStructRegister(TypeDefinition Type)
@@ -1118,7 +1120,7 @@ namespace Weavers
         {
             var definition = ModuleDefinition;
 
-            if (definition.Name != "")
+            if (definition.Name != "DefinitionPlaceholder")
             {
                 var path = GetUEAssemblyPath(AssemblyFilePath);
 
@@ -1179,9 +1181,9 @@ namespace Weavers
 
         private string GetUEAssemblyPath(string assemblyFilePath)
         {
-            var scriptPathName = "";
+            var scriptPathName = "ScriptPathPlaceholder";
 
-            var ueAssemblyName = "";
+            var ueAssemblyName = "AssemblyPlaceholder";
 
             var scriptIndex = assemblyFilePath.LastIndexOf(scriptPathName, StringComparison.Ordinal);
 

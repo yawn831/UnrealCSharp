@@ -1,6 +1,7 @@
 #if WITH_CORECLR
 #include "Domain/CoreCLR/FCoreCLRFunctionLibrary.h"
 #include "Common/FUnrealCSharpFunctionLibrary.h"
+#include "CoreMacro/Macro.h"
 
 FString FCoreCLRFunctionLibrary::GetCoreCLRDirectory()
 {
@@ -20,15 +21,7 @@ FString FCoreCLRFunctionLibrary::GetHostFxrPath()
 	return FString::Printf(TEXT(
 		"%s/%s"),
 	                       *GetCoreCLRDirectory(),
-#if PLATFORM_WINDOWS
-	                       TEXT("hostfxr.dll")
-#elif PLATFORM_LINUX
-	                       TEXT("libhostfxr.so")
-#elif PLATFORM_MAC_X86
-	                       TEXT("libhostfxr.dylib")
-#elif PLATFORM_MAC_ARM64
-	                       TEXT("libhostfxr.dylib")
-#endif
+	                       *LIB_HOSTFXR
 	);
 }
 
@@ -37,7 +30,7 @@ FString FCoreCLRFunctionLibrary::GetRuntimeConfigPath()
 	return FString::Printf(TEXT(
 		"%s/%s"),
 	                       *GetCoreCLRDirectory(),
-	                       TEXT("CoreCLR.runtimeconfig.json")
+	                       *CORECLR_RUNTIME_CONFIG
 	);
 }
 

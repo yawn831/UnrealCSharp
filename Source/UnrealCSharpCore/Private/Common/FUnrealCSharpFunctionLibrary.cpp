@@ -1145,8 +1145,8 @@ bool FUnrealCSharpFunctionLibrary::SaveStringToFile(const FString& InFileName, c
 		PlatformFile.CreateDirectoryTree(*DirectoryName);
 	}
 
-	return FFileHelper::SaveStringToFile(InString, *InFileName, FFileHelper::EEncodingOptions::ForceUTF8, FileManager,
-	                                     FILEWRITE_None);
+	return FFileHelper::SaveStringToFile(InString, *InFileName, FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM,
+	                                     FileManager, FILEWRITE_None);
 }
 
 TMap<FString, TArray<FString>> FUnrealCSharpFunctionLibrary::LoadFileToArray(const FString& InFileName)

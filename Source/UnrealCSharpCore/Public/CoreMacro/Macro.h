@@ -54,6 +54,16 @@
 
 #define SOLUTION_CONFIGURATION_PLATFORMS_PLACEHOLDER FString(TEXT("SolutionConfigurationPlatformsPlaceholder"))
 
+#define UE_NAME_PLACEHOLDER FString(TEXT("UENamePlaceholder"))
+
+#define GAME_NAME_PLACEHOLDER FString(TEXT("GameNamePlaceholder"))
+
+#define DEFINITION_PLACEHOLDER FString(TEXT("DefinitionPlaceholder"))
+
+#define ASSEMBLY_PLACEHOLDER FString(TEXT("AssemblyPlaceholder"))
+
+#define SCRIPT_PATH_PLACEHOLDER FString(TEXT("ScriptPathPlaceholder"))
+
 #define PROPS_SUFFIX FString(TEXT(".props"))
 
 #define PROJECT_SUFFIX FString(TEXT(".csproj"))
@@ -69,6 +79,16 @@
 #define MARKDOWN_SUFFIX FString(TEXT(".md"))
 
 #define XML_SUFFIX FString(TEXT(".xml"))
+
+#if PLATFORM_WINDOWS
+#define LIB_HOSTFXR FString(TEXT("hostfxr.dll"))
+#elif PLATFORM_LINUX
+#define LIB_HOSTFXR FString(TEXT("libhostfxr.so"))
+#elif PLATFORM_MAC_X86 || PLATFORM_MAC_ARM64
+#define LIB_HOSTFXR FString(TEXT("libhostfxr.dylib"))
+#endif
+
+#define CORECLR_RUNTIME_CONFIG FString(TEXT("CoreCLR.runtimeconfig.json"))
 
 #define DEFAULT_PUBLISH_DIRECTORY FString(TEXT("Script"))
 
