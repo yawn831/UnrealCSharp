@@ -9,7 +9,6 @@
 #include "WidgetBlueprint.h"
 #include "Animation/AnimBlueprint.h"
 #include "Animation/AnimInstance.h"
-#include "Interfaces/ITargetPlatformManagerModule.h"
 #endif
 #include "CoreMacro/Macro.h"
 #include "CoreMacro/NamespaceMacro.h"
@@ -28,6 +27,10 @@
 #include "Windows/HideWindowsPlatformTypes.h"
 #endif
 #endif
+#endif
+
+#if WITH_EDITOR
+EScriptDomainType FUnrealCSharpFunctionLibrary::ScriptDomainType = EScriptDomainType::CoreCLR;
 #endif
 
 #if WITH_EDITOR
@@ -1523,31 +1526,24 @@ void FUnrealCSharpFunctionLibrary::SyncProcess(const FString& InURL, const FStri
 #endif
 
 #if WITH_EDITOR
-FString FUnrealCSharpFunctionLibrary::GetPlatformName()
+void FUnrealCSharpFunctionLibrary::SetScriptDomainType(const EScriptDomainType InScriptDomainType)
 {
-	if (IsRunningCookCommandlet())
+	ScriptDomainType = InScriptDomainType;
+}
+
+EScriptDomainType FUnrealCSharpFunctionLibrary::GetScriptDomainType(const FString& InPlatformName)
+{
+	if (const auto UnrealCSharpSetting = GetMutableDefaultSafe<UUnrealCSharpSetting>())
 	{
-		if (const auto TargetPlatformManager = GetTargetPlatformManager())
-		{
-			if (const auto& ActiveTargetPlatforms = TargetPlatformManager->GetActiveTargetPlatforms();
-				!ActiveTargetPlatforms.IsEmpty())
-			{
-				return ActiveTargetPlatforms[0]->IniPlatformName();
-			}
-		}
+		return UnrealCSharpSetting->GetScriptDomainType(InPlatformName);
 	}
 
-	return FPlatformProperties::IniPlatformName();
+	return EScriptDomainType::CoreCLR;
 }
 
 EScriptDomainType FUnrealCSharpFunctionLibrary::GetScriptDomainType()
 {
-	if (const auto UnrealCSharpSetting = GetMutableDefaultSafe<UUnrealCSharpSetting>())
-	{
-		return UnrealCSharpSetting->GetScriptDomainType(GetPlatformName());
-	}
-
-	return EScriptDomainType::CoreCLR;
+	return ScriptDomainType;
 }
 
 bool FUnrealCSharpFunctionLibrary::IsMonoDomain()
