@@ -273,10 +273,6 @@ public:
 
 	static EScriptDomainType GetScriptDomainType();
 
-	static bool IsMonoDomain();
-
-	static bool IsCoreCLRDomain();
-
 private:
 	static EScriptDomainType ScriptDomainType;
 #endif

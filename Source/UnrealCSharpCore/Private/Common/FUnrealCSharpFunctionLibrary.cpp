@@ -1026,6 +1026,9 @@ FString FUnrealCSharpFunctionLibrary::GetFullInteropPublishPath()
 #if WITH_EDITOR
 	return FPaths::ConvertRelativePathToFull(
 		FUnrealCSharpFunctionLibrary::GetFullPublishDirectory() / (INTEROP_NAME + DLL_SUFFIX));
+#elif WITH_MONO
+	return FPaths::ConvertRelativePathToFull(
+		FUnrealCSharpFunctionLibrary::GetFullPublishDirectory() / (INTEROP_NAME + DLL_SUFFIX));
 #else
 	return FPaths::ConvertRelativePathToFull(
 		FPaths::GetPath(FPlatformProcess::ExecutablePath()) / (INTEROP_NAME + DLL_SUFFIX));
@@ -1060,6 +1063,7 @@ TArray<FString> FUnrealCSharpFunctionLibrary::GetFullCustomProjectsPublishPath()
 TArray<FString> FUnrealCSharpFunctionLibrary::GetFullAssemblyPublishPath()
 {
 	return TArrayBuilder<FString>().
+	       Add(GetFullInteropPublishPath()).
 	       Add(GetFullUEPublishPath()).
 	       Add(GetFullGamePublishPath()).
 	       Append(GetFullCustomProjectsPublishPath()).
@@ -1544,15 +1548,5 @@ EScriptDomainType FUnrealCSharpFunctionLibrary::GetScriptDomainType(const FStrin
 EScriptDomainType FUnrealCSharpFunctionLibrary::GetScriptDomainType()
 {
 	return ScriptDomainType;
-}
-
-bool FUnrealCSharpFunctionLibrary::IsMonoDomain()
-{
-	return GetScriptDomainType() == EScriptDomainType::Mono;
-}
-
-bool FUnrealCSharpFunctionLibrary::IsCoreCLRDomain()
-{
-	return GetScriptDomainType() == EScriptDomainType::CoreCLR;
 }
 #endif
