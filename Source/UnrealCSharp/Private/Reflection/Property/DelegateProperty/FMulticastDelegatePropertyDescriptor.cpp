@@ -2,12 +2,12 @@
 #include "Environment/FCSharpEnvironment.h"
 #include "Reflection/Delegate/FMulticastDelegateHelper.h"
 
-void FMulticastDelegatePropertyDescriptor::Get(void* Src, void** Dest, std::true_type) const
+void FMulticastDelegatePropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FMember) const
 {
 	*reinterpret_cast<IManagedHandle*>(Dest) = NewWeakRef(Src);
 }
 
-void FMulticastDelegatePropertyDescriptor::Get(void* Src, void** Dest, std::false_type) const
+void FMulticastDelegatePropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FReturn) const
 {
 	*reinterpret_cast<IManagedHandle*>(Dest) = NewWeakRef(Src);
 }

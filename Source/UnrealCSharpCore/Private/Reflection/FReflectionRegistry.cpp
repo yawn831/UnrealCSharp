@@ -942,7 +942,7 @@ FClassReflection* FReflectionRegistry::GetClass(const IManagedHandle InManagedCl
 
 			FullName2Class.Add(FullName, Class);
 
-			Class->Initialize();
+			InitializeClass(Class);
 
 			return Class;
 		}
@@ -969,7 +969,7 @@ FClassReflection* FReflectionRegistry::GetClass(const FString& InNameSpace, cons
 
 			FullName2Class.Add(FullName, Class);
 
-			Class->Initialize();
+			InitializeClass(Class);
 
 			return Class;
 		}
@@ -2410,3 +2410,27 @@ FClassReflection* FReflectionRegistry::GetArrayParamAttributeClass() const
 	return ArrayParamAttributeClass;
 }
 #endif
+
+void FReflectionRegistry::InitializeClass(FClassReflection* InClass)
+{
+	if (InClass != nullptr)
+	{
+		if (bIsInitializing)
+		{
+			PendingInitializeClasses.Add(InClass);
+		}
+		else
+		{
+			TGuardValue GuardValue(bIsInitializing, true);
+
+			InClass->Initialize();
+
+			for (auto Index = 0; Index < PendingInitializeClasses.Num(); ++Index)
+			{
+				PendingInitializeClasses[Index]->Initialize();
+			}
+
+			PendingInitializeClasses.Reset();
+		}
+	}
+}

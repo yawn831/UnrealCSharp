@@ -4,6 +4,7 @@
 #include "Reflection/FReflectionRegistry.h"
 #include "CoreMacro/NamespaceMacro.h"
 #include "Async/Async.h"
+#include "UEVersion.h"
 
 namespace
 {
@@ -14,7 +15,15 @@ namespace
 		{
 			const auto FoundObject = FCSharpEnvironment::GetEnvironment().GetObject(InObject);
 
+#if UE_T_SCRIPT_INTERFACE_CONSTRUCTOR_U_OBJECT
 			const auto ScriptInterface = new TScriptInterface<IInterface>(FoundObject);
+#else
+			const auto ScriptInterface = new TScriptInterface<IInterface>();
+
+			ScriptInterface->SetObject(FoundObject);
+
+			static_cast<FScriptInterface*>(ScriptInterface)->SetInterface(FoundObject);
+#endif
 
 			const auto Class = FReflectionRegistry::Get().GetClass(InManagedType);
 
@@ -30,7 +39,11 @@ namespace
 				if (const auto FoundB = FCSharpEnvironment::GetEnvironment().
 					GetMulti<TScriptInterface<IInterface>>(InB))
 				{
+#if UE_T_SCRIPT_INTERFACE_CONSTRUCTOR_U_OBJECT
 					return *FoundA == *FoundB ? 1 : 0;
+#else
+					return FoundA->GetObject() == FoundB->GetObject() ? 1 : 0;
+#endif
 				}
 			}
 

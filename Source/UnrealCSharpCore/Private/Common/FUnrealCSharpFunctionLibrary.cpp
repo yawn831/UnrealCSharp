@@ -1184,7 +1184,11 @@ TMap<FString, TArray<FString>> FUnrealCSharpFunctionLibrary::LoadFileToArray(con
 					}
 				}
 
+#if UE_F_JSON_OBJECT_VALUES_KEY_F_SHARED_STRING
+				Result.Add(FString(*Key), Array);
+#else
 				Result.Add(Key, Array);
+#endif
 			}
 		}
 	}
@@ -1208,7 +1212,11 @@ TMap<FString, FString> FUnrealCSharpFunctionLibrary::LoadFileToString(const FStr
 
 			for (const auto& [Key, Value] : JsonObject->Values)
 			{
+#if UE_F_JSON_OBJECT_VALUES_KEY_F_SHARED_STRING
+				Result.Add(FString(*Key), Value->AsString());
+#else
 				Result.Add(Key, Value->AsString());
+#endif
 			}
 		}
 	}
@@ -1292,7 +1300,11 @@ const TArray<FString>& FUnrealCSharpFunctionLibrary::GetEngineModuleList()
 			{
 				for (const auto& [Key, PLACEHOLDER] : OutObject->Get()->Values)
 				{
+#if UE_F_JSON_OBJECT_VALUES_KEY_F_SHARED_STRING
+					EngineModuleList.AddUnique(FString(*Key));
+#else
 					EngineModuleList.AddUnique(Key);
+#endif
 				}
 			}
 
@@ -1300,7 +1312,11 @@ const TArray<FString>& FUnrealCSharpFunctionLibrary::GetEngineModuleList()
 			{
 				for (const auto& [Key, PLACEHOLDER] : OutObject->Get()->Values)
 				{
+#if UE_F_JSON_OBJECT_VALUES_KEY_F_SHARED_STRING
+					EngineModuleList.AddUnique(FString(*Key));
+#else
 					EngineModuleList.AddUnique(Key);
+#endif
 				}
 			}
 		}
@@ -1329,7 +1345,11 @@ const TArray<FString>& FUnrealCSharpFunctionLibrary::GetProjectModuleList()
 			{
 				for (const auto& [Key, PLACEHOLDER] : OutObject->Get()->Values)
 				{
+#if UE_F_JSON_OBJECT_VALUES_KEY_F_SHARED_STRING
+					ProjectModuleList.AddUnique(FString(*Key));
+#else
 					ProjectModuleList.AddUnique(Key);
+#endif
 				}
 			}
 
@@ -1337,7 +1357,11 @@ const TArray<FString>& FUnrealCSharpFunctionLibrary::GetProjectModuleList()
 			{
 				for (const auto& [Key, PLACEHOLDER] : OutObject->Get()->Values)
 				{
+#if UE_F_JSON_OBJECT_VALUES_KEY_F_SHARED_STRING
+					ProjectModuleList.AddUnique(FString(*Key));
+#else
 					ProjectModuleList.AddUnique(Key);
+#endif
 				}
 			}
 		}

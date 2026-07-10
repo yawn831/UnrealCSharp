@@ -107,8 +107,12 @@ namespace
 		{
 			BindFunction(InClass, InFunctionName, [](UFunction* InFunction)
 			{
+#if UE_F_PROPERTY_CONSTRUCTOR_E_OBJECT_FLAGS
 				const auto SourceActionProperty = new FObjectProperty(InFunction, TEXT("SourceAction"),
 				                                                      RF_Public | RF_Transient);
+#else
+				const auto SourceActionProperty = new FObjectProperty(InFunction, TEXT("SourceAction"));
+#endif
 
 				SourceActionProperty->PropertyClass = UInputAction::StaticClass();
 
@@ -116,22 +120,34 @@ namespace
 
 				InFunction->AddCppProperty(SourceActionProperty);
 
+#if UE_F_PROPERTY_CONSTRUCTOR_E_OBJECT_FLAGS
 				const auto TriggeredTimeProperty = new FFloatProperty(InFunction, TEXT("TriggeredTime"),
 				                                                      RF_Public | RF_Transient);
+#else
+				const auto TriggeredTimeProperty = new FFloatProperty(InFunction, TEXT("TriggeredTime"));
+#endif
 
 				TriggeredTimeProperty->SetPropertyFlags(CPF_Parm);
 
 				InFunction->AddCppProperty(TriggeredTimeProperty);
 
+#if UE_F_PROPERTY_CONSTRUCTOR_E_OBJECT_FLAGS
 				const auto ElapsedTimeProperty = new FFloatProperty(InFunction, TEXT("ElapsedTime"),
 				                                                    RF_Public | RF_Transient);
+#else
+				const auto ElapsedTimeProperty = new FFloatProperty(InFunction, TEXT("ElapsedTime"));
+#endif
 
 				ElapsedTimeProperty->SetPropertyFlags(CPF_Parm);
 
 				InFunction->AddCppProperty(ElapsedTimeProperty);
 
+#if UE_F_PROPERTY_CONSTRUCTOR_E_OBJECT_FLAGS
 				const auto ActionValueProperty = new FStructProperty(InFunction, TEXT("ActionValue"),
 				                                                     RF_Public | RF_Transient);
+#else
+				const auto ActionValueProperty = new FStructProperty(InFunction, TEXT("ActionValue"));
+#endif
 
 #if UE_F_PROPERTY_SET_ELEMENT_SIZE
 				ActionValueProperty->SetElementSize(FInputActionValue::StaticStruct()->GetStructureSize());

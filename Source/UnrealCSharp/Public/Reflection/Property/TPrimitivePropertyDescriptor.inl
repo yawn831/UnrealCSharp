@@ -18,12 +18,12 @@ public:
 		Super::Property->CopySingleValue(Dest, Src);
 	}
 
-	virtual auto Get(void* Src, void** Dest, std::true_type) const -> void override
+	virtual auto Get(void* Src, void** Dest, FPropertyArgument::FMember) const -> void override
 	{
 		*Dest = IManagedHandleToObject(Super::Class->BoxValue(Src));
 	}
 
-	virtual auto Get(void* Src, void** Dest, std::false_type) const -> void override
+	virtual auto Get(void* Src, void** Dest, FPropertyArgument::FReturn) const -> void override
 	{
 		*Dest = IManagedHandleToObject(Super::Class->BoxValue(Src));
 	}

@@ -7,6 +7,7 @@
 #include "Settings/ProjectPackagingSettings.h"
 #include "Misc/ScopedSlowTask.h"
 #include "IContentBrowserDataModule.h"
+#include "Interfaces/ITargetPlatform.h"
 #include "Interfaces/ITargetPlatformManagerModule.h"
 #include "FAssetGenerator.h"
 #include "FClassGenerator.h"
@@ -29,6 +30,7 @@
 #include "Setting/UnrealCSharpEditorSetting.h"
 #include "Setting/UnrealCSharpSetting.h"
 #include "Common/FScriptDomainTypeScope.h"
+#include "UEVersion.h"
 
 #define LOCTEXT_NAMESPACE "FUnrealCSharpEditorModule"
 
@@ -64,8 +66,13 @@ void FUnrealCSharpEditorModule::StartupModule()
 
 	UnrealCSharpBlueprintToolBar = MakeShared<FUnrealCSharpBlueprintToolBar>();
 
+#if UE_F_CORE_DELEGATES_GET_ON_POST_ENGINE_INIT
+	OnPostEngineInitDelegateHandle = FCoreDelegates::GetOnPostEngineInit().AddRaw(
+		this, &FUnrealCSharpEditorModule::OnPostEngineInit);
+#else
 	OnPostEngineInitDelegateHandle = FCoreDelegates::OnPostEngineInit.AddRaw(
 		this, &FUnrealCSharpEditorModule::OnPostEngineInit);
+#endif
 
 	CodeAnalysisConsoleCommand = MakeUnique<FAutoConsoleCommand>(
 		TEXT("UnrealCSharp.Editor.CodeAnalysis"), TEXT(""),
@@ -163,7 +170,11 @@ void FUnrealCSharpEditorModule::ShutdownModule()
 
 	if (OnPostEngineInitDelegateHandle.IsValid())
 	{
+#if UE_F_CORE_DELEGATES_GET_ON_POST_ENGINE_INIT
+		FCoreDelegates::GetOnPostEngineInit().Remove(OnPostEngineInitDelegateHandle);
+#else
 		FCoreDelegates::OnPostEngineInit.Remove(OnPostEngineInitDelegateHandle);
+#endif
 	}
 
 	if (UnrealCSharpBlueprintToolBar.IsValid())

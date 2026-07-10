@@ -10,7 +10,7 @@
 #include "WidgetBlueprint.h"
 #include "Engine/UserDefinedEnum.h"
 #if UE_STRUCT_UTILS_U_USER_DEFINED_STRUCT
-#include "UserDefinedStructure/UserDefinedStructEditorData.h"
+#include "StructUtils/UserDefinedStruct.h"
 #else
 #include "Engine/UserDefinedStruct.h"
 #endif

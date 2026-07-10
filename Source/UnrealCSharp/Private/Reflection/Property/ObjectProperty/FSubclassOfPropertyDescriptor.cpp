@@ -1,17 +1,7 @@
 #include "Reflection/Property/ObjectProperty/FSubclassOfPropertyDescriptor.h"
 #include "Environment/FCSharpEnvironment.h"
 
-void FSubclassOfPropertyDescriptor::Get(void* Src, void** Dest, std::true_type) const
-{
-	const auto Object = Class->NewObject();
-
-	FCSharpEnvironment::GetEnvironment().AddMultiReference<TSubclassOf<UObject>, true, false>(
-		Class, Object, Src);
-
-	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
-}
-
-void FSubclassOfPropertyDescriptor::Get(void* Src, void** Dest, std::false_type) const
+void FSubclassOfPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FMember) const
 {
 	auto Object = FCSharpEnvironment::GetEnvironment().GetMultiObject<TSubclassOf<UObject>>(Src);
 
@@ -22,6 +12,26 @@ void FSubclassOfPropertyDescriptor::Get(void* Src, void** Dest, std::false_type)
 		FCSharpEnvironment::GetEnvironment().AddMultiReference<TSubclassOf<UObject>, false, true>(
 			Class, Object, Src);
 	}
+
+	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
+}
+
+void FSubclassOfPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FParameter) const
+{
+	const auto Object = Class->NewObject();
+
+	FCSharpEnvironment::GetEnvironment().AddMultiReference<TSubclassOf<UObject>, false, false>(
+		Class, Object, Src);
+
+	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
+}
+
+void FSubclassOfPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FReturn) const
+{
+	const auto Object = Class->NewObject();
+
+	FCSharpEnvironment::GetEnvironment().AddMultiReference<TSubclassOf<UObject>, true, false>(
+		Class, Object, Src);
 
 	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
 }

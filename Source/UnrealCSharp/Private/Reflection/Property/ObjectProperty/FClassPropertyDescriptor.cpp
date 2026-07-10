@@ -1,14 +1,14 @@
 #include "Reflection/Property/ObjectProperty/FClassPropertyDescriptor.h"
 #include "Environment/FCSharpEnvironment.h"
 
-void FClassPropertyDescriptor::Get(void* Src, void** Dest, std::true_type) const
+void FClassPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FMember) const
 {
 	const auto SrcClass = Cast<UClass>(Property->GetObjectPropertyValue(Src));
 
 	*reinterpret_cast<IManagedHandle*>(Dest) = FCSharpEnvironment::GetEnvironment().Bind(SrcClass);
 }
 
-void FClassPropertyDescriptor::Get(void* Src, void** Dest, std::false_type) const
+void FClassPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FReturn) const
 {
 	const auto SrcClass = Cast<UClass>(Property->GetObjectPropertyValue(Src));
 

@@ -7,20 +7,20 @@ FStructPropertyDescriptor::FStructPropertyDescriptor(FStructProperty* InProperty
 	FCSharpEnvironment::GetEnvironment().Bind<false>(InProperty->Struct);
 }
 
-void FStructPropertyDescriptor::Get(void* Src, void** Dest, std::true_type) const
-{
-	const auto Object = Class->NewObject();
-
-	FCSharpEnvironment::GetEnvironment().AddStructReference<true>(Property->Struct, Src, Object);
-
-	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
-}
-
-void FStructPropertyDescriptor::Get(void* Src, void** Dest, std::false_type) const
+void FStructPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FMember) const
 {
 	const auto Object = Class->NewObject();
 
 	FCSharpEnvironment::GetEnvironment().AddStructReference<false>(Property->Struct, Src, Object);
+
+	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
+}
+
+void FStructPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FReturn) const
+{
+	const auto Object = Class->NewObject();
+
+	FCSharpEnvironment::GetEnvironment().AddStructReference<true>(Property->Struct, Src, Object);
 
 	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
 }

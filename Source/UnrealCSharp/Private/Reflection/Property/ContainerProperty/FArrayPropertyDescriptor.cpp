@@ -2,14 +2,14 @@
 #include "Environment/FCSharpEnvironment.h"
 #include "Reflection/Container/FArrayHelper.h"
 
-void FArrayPropertyDescriptor::Get(void* Src, void** Dest, std::true_type) const
-{
-	*reinterpret_cast<IManagedHandle*>(Dest) = NewWeakRef(Src, true);
-}
-
-void FArrayPropertyDescriptor::Get(void* Src, void** Dest, std::false_type) const
+void FArrayPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FMember) const
 {
 	*reinterpret_cast<IManagedHandle*>(Dest) = NewWeakRef(Src, false);
+}
+
+void FArrayPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FReturn) const
+{
+	*reinterpret_cast<IManagedHandle*>(Dest) = NewWeakRef(Src, true);
 }
 
 void FArrayPropertyDescriptor::Get(void* Src, void* Dest) const

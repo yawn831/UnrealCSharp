@@ -2,17 +2,7 @@
 #if UE_F_ANSI_STR_PROPERTY
 #include "Environment/FCSharpEnvironment.h"
 
-void FAnsiStrPropertyDescriptor::Get(void* Src, void** Dest, std::true_type) const
-{
-	const auto Object = Class->NewObject();
-
-	FCSharpEnvironment::GetEnvironment().AddStringReference<FAnsiString, true, false>(
-		Class, Object, Src);
-
-	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
-}
-
-void FAnsiStrPropertyDescriptor::Get(void* Src, void** Dest, std::false_type) const
+void FAnsiStrPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FMember) const
 {
 	auto Object = FCSharpEnvironment::GetEnvironment().GetStringObject<FAnsiString>(Src);
 
@@ -23,6 +13,16 @@ void FAnsiStrPropertyDescriptor::Get(void* Src, void** Dest, std::false_type) co
 		FCSharpEnvironment::GetEnvironment().AddStringReference<FAnsiString, false, true>(
 			Class, Object, Src);
 	}
+
+	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
+}
+
+void FAnsiStrPropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FReturn) const
+{
+	const auto Object = Class->NewObject();
+
+	FCSharpEnvironment::GetEnvironment().AddStringReference<FAnsiString, true, false>(
+		Class, Object, Src);
 
 	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
 }

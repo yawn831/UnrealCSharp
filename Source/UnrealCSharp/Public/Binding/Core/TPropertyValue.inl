@@ -933,7 +933,11 @@ struct TPropertyValue<T, std::enable_if_t<TIsTOptional<std::decay_t<T>>::Value, 
 		{
 			const auto FoundClass = TPropertyClass<T, T>::Get();
 
+#if UE_F_PROPERTY_CONSTRUCTOR_E_OBJECT_FLAGS
 			const auto OptionalProperty = new FOptionalProperty(nullptr, "", EObjectFlags::RF_Transient);
+#else
+			const auto OptionalProperty = new FOptionalProperty(nullptr, "");
+#endif
 
 			const auto Property = FTypeBridge::Factory<>(FoundClass->GetGenericArgument(),
 			                                             nullptr, "", EObjectFlags::RF_Transient);
@@ -959,7 +963,11 @@ struct TPropertyValue<T, std::enable_if_t<TIsTOptional<std::decay_t<T>>::Value, 
 	{
 		const auto FoundClass = TPropertyClass<T, T>::Get();
 
+#if UE_F_PROPERTY_CONSTRUCTOR_E_OBJECT_FLAGS
 		const auto OptionalProperty = new FOptionalProperty(nullptr, "", EObjectFlags::RF_Transient);
+#else
+		const auto OptionalProperty = new FOptionalProperty(nullptr, "");
+#endif
 
 		const auto Property = FTypeBridge::Factory<>(FoundClass->GetGenericArgument(), nullptr,
 		                                             "", EObjectFlags::RF_Transient);

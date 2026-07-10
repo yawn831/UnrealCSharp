@@ -34,7 +34,8 @@ bool FManagedFunctionDescriptor::Invoke(const FMethodReflection* InMethod,
 			{
 				IManagedHandle ManagedHandle{};
 
-				PropertyDescriptor->Get<std::false_type>(PropertyAddress, reinterpret_cast<void**>(&ManagedHandle));
+				PropertyDescriptor->Get<FPropertyArgument::FParameter>(PropertyAddress,
+				                                                       reinterpret_cast<void**>(&ManagedHandle));
 
 				CompoundManagedHandles.Add(ManagedHandle);
 

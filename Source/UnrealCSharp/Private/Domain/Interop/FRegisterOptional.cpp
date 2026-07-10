@@ -15,7 +15,11 @@ namespace
 		{
 			const auto Class = FReflectionRegistry::Get().GetClass(InManagedType);
 
+#if UE_F_PROPERTY_CONSTRUCTOR_E_OBJECT_FLAGS
 			const auto OptionalProperty = new FOptionalProperty(nullptr, "", EObjectFlags::RF_Transient);
+#else
+			const auto OptionalProperty = new FOptionalProperty(nullptr, "");
+#endif
 
 			const auto ValueProperty = FTypeBridge::Factory(Class->GetGenericArgument(),
 			                                                OptionalProperty, "",
@@ -36,7 +40,11 @@ namespace
 		{
 			const auto Class = FReflectionRegistry::Get().GetClass(InManagedType);
 
+#if UE_F_PROPERTY_CONSTRUCTOR_E_OBJECT_FLAGS
 			const auto OptionalProperty = new FOptionalProperty(nullptr, "", EObjectFlags::RF_Transient);
+#else
+			const auto OptionalProperty = new FOptionalProperty(nullptr, "");
+#endif
 
 			const auto ValueProperty = FTypeBridge::Factory(Class->GetGenericArgument(),
 			                                                OptionalProperty, "",

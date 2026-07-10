@@ -1,17 +1,7 @@
 #include "Reflection/Property/StringProperty/FNamePropertyDescriptor.h"
 #include "Environment/FCSharpEnvironment.h"
 
-void FNamePropertyDescriptor::Get(void* Src, void** Dest, std::true_type) const
-{
-	const auto Object = Class->NewObject();
-
-	FCSharpEnvironment::GetEnvironment().AddStringReference<FName, true, false>(
-		Class, Object, Src);
-
-	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
-}
-
-void FNamePropertyDescriptor::Get(void* Src, void** Dest, std::false_type) const
+void FNamePropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FMember) const
 {
 	auto Object = FCSharpEnvironment::GetEnvironment().GetStringObject<FName>(Src);
 
@@ -22,6 +12,16 @@ void FNamePropertyDescriptor::Get(void* Src, void** Dest, std::false_type) const
 		FCSharpEnvironment::GetEnvironment().AddStringReference<FName, false, true>(
 			Class, Object, Src);
 	}
+
+	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
+}
+
+void FNamePropertyDescriptor::Get(void* Src, void** Dest, FPropertyArgument::FReturn) const
+{
+	const auto Object = Class->NewObject();
+
+	FCSharpEnvironment::GetEnvironment().AddStringReference<FName, true, false>(
+		Class, Object, Src);
 
 	*reinterpret_cast<IManagedHandle*>(Dest) = Object;
 }
